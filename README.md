@@ -118,6 +118,20 @@ Replace `projectId` and metadata with your own values from the Reown Cloud dashb
 - Switch networks
 - Disconnect easily
 
+Also, a direct control of wallet component is being provided:
+
+
+ ```jsx
+    <p>Modal is {isModalOpen ? 'open' : 'closed'}</p>
+    {isConnected ? (
+        <div>
+            <button onClick={() => disconnect()}>Disconnect Wallet</button>
+        </div>
+    ) : (
+        <button onClick={open}>Connect Wallet</button>
+    )}
+    ```
+
 ---
 
 ## 📜 License
