@@ -1,12 +1,125 @@
-# React + Vite
+# 🦊 Reown Wallet Interface
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a React-based demo dApp interface integrating the [Reown AppKit](https://reown.com/) SDK. It allows users to connect their Web3 wallet, view their native and USDC balances across multiple networks, and switch chains seamlessly.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- 🔐 Connect wallets via Reown AppKit
+- 🌐 Multi-chain support: Ethereum Mainnet, Arbitrum, Polygon, Optimism
+- 💰 Display native token balance
+- 🪙 Display USDC ERC-20 token balance on each network
+- 🔁 Switch between supported networks dynamically
+- 🔍 Fully reactive to network and wallet changes
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js >= 18
+- npm or yarn
+
+### Installation
+
+```bash
+git clone https://github.com/YOUR_USERNAME/reown-wallet.git
+cd reown-wallet
+npm install
+# or
+yarn install
+```
+
+### Run the Dev Server
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+---
+
+## ⚙️ Configuration
+
+The dApp uses the `@reown/appkit` and `wagmi` libraries to provide wallet and network functionality.
+
+### Networks
+
+The app is preconfigured to support:
+
+- Ethereum Mainnet (Chain ID: 1)
+- Arbitrum One (42161)
+- Polygon (137)
+- Optimism (10)
+
+You can customize supported networks in:
+
+```js
+const networks = [mainnet, arbitrum, polygon, optimism];
+```
+
+### USDC Contracts
+
+The USDC balance is fetched via `useReadContracts`, mapped per network:
+
+```js
+const usdcAddresses = {
+  1:    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',   // Ethereum
+  137:  '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',   // Polygon
+  42161:'0xaf88d065e77c8cC2239327C5EDb3A432268e5831',   // Arbitrum
+  10:   '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85'    // Optimism
+}
+```
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+├── App.jsx         # Main UI logic and AppKit integration
+├── components/     # Optional: for modular UI (not used yet)
+├── index.html      # Root HTML entry
+```
+
+---
+
+## 🔐 Reown AppKit Configuration
+
+The Reown AppKit modal is configured using:
+
+```js
+createAppKit({
+  adapters: [wagmiAdapter],
+  projectId: 'YOUR_PROJECT_ID',
+  metadata: {
+    name: 'AppKit',
+    description: 'AppKit Example',
+    url: 'https://example.com',
+    icons: [...]
+  }
+});
+```
+
+Replace `projectId` and metadata with your own values from the Reown Cloud dashboard.
+
+---
+
+## 🧪 Example UI
+
+- Connect wallet with `<appkit-button />`
+- View:
+  - Address
+  - Native balance
+  - USDC token balance
+- Switch networks
+- Disconnect easily
+
+---
+
+## 📜 License
+
+This project is open source and available under the MIT License.
