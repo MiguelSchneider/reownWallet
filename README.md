@@ -122,14 +122,14 @@ Also, a direct control of wallet component is being provided:
 
 
  ```jsx
-    <p>Modal is {isModalOpen ? 'open' : 'closed'}</p>
-    {isConnected ? (
-        <div>
-            <button onClick={() => disconnect()}>Disconnect Wallet</button>
-        </div>
-    ) : (
-        <button onClick={open}>Connect Wallet</button>
-    )}
+<p>Modal is {isModalOpen ? 'open' : 'closed'}</p>
+{isConnected ? (
+    <div>
+        <button onClick={() => disconnect()}>Disconnect Wallet</button>
+    </div>
+) : (
+    <button onClick={open}>Connect Wallet</button>    
+)}
 ```
 
 ---
