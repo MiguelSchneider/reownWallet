@@ -130,7 +130,7 @@ Also, a direct control of wallet component is being provided:
     ) : (
         <button onClick={open}>Connect Wallet</button>
     )}
-    ```
+```
 
 ---
 
