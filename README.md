@@ -25,7 +25,7 @@ This is a React-based demo dApp interface integrating the [Reown AppKit](https:/
 ### Installation
 
 ```bash
-git clone https://github.com/miguelschneider/reown-wallet.git
+git clone https://github.com/miguelschneider/reownWallet.git
 cd reown-wallet
 npm install
 # or
