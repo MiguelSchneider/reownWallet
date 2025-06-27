@@ -79,7 +79,7 @@ function USDCBalance() {
     ? formatUnits(balanceResult, decimals)
     : null;
 
-  return <div>{formatted && <p>USDC Balance: {formatted}</p>}</div>;
+  return <div>{formatted && <p>  <span style={{ color: "#718096" }}> USDC Balance: {formatted} </span></p>}</div>;
 }
 
 
@@ -149,7 +149,7 @@ function BUIDLPurchase() {
                 <appkit-button size='sm' balance='hide' />
             </div>
             <div style={{ marginTop: "16px", color: "#4a5568" }}>
-                Expected
+                <span style={{ color: "#718096" }}> Expected </span>
                 <div style={{ fontSize: "18px", fontWeight: "bold", color: "#2d3748" }}>
                     <strong>1.00 BUIDL per 1.01 USDC</strong>
                 </div>
@@ -175,14 +175,15 @@ function BUIDLPurchase() {
                     value={amount}
                     onChange={handleInputChange}
                     placeholder="0.00"
-            style={{
-                border: "none",
-                outline: "none",
-                fontSize: "18px",
-                flex: 1,
-            }}
-            max={usdcBalance || undefined}
-        />
+                    style={{
+                        border: "none",
+                        outline: "none",
+                        fontSize: "18px",
+                        flex: 1,
+                    }}
+                    max={usdcBalance || undefined}
+                    disabled={!isConnected}
+                />
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <img
                         src="https://images.seeklogo.com/logo-png/40/1/usd-coin-usdc-logo-png_seeklogo-408043.png"
@@ -198,7 +199,7 @@ function BUIDLPurchase() {
                 </div>
             )}
             <USDCBalance />
-            <p style={{ marginTop: "16px" }}>
+            {/* <p style={{ marginTop: "16px" }}>
                 ↓  To
             </p>
             <div style={{ display: "flex", flexDirection: "row", gap: "18px", alignItems: "center", marginTop: "16px" }}>
@@ -210,7 +211,7 @@ function BUIDLPurchase() {
                 <div>
                     <strong>Buy BUIDL </strong> from <strong> Securitize </strong>
                 </div>
-            </div>
+            </div> */}
 
             {isConnected ? (
                 chainId !== ETHEREUM_MAINNET_ID ? (
