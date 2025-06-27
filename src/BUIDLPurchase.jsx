@@ -17,69 +17,69 @@ import { formatUnits } from 'viem';
 
 
 const erc20Contract = {
-  abi: [
-    {
-      constant: true,
-      inputs: [{ name: 'account', type: 'address' }],
-      name: 'balanceOf',
-      outputs: [{ name: '', type: 'uint256' }],
-      type: 'function',
-      stateMutability: 'view',
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: 'decimals',
-      outputs: [{ name: '', type: 'uint8' }],
-      stateMutability: 'view',
-      type: 'function'
-    }
-  ],
+    abi: [
+        {
+            constant: true,
+            inputs: [{ name: 'account', type: 'address' }],
+            name: 'balanceOf',
+            outputs: [{ name: '', type: 'uint256' }],
+            type: 'function',
+            stateMutability: 'view',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'decimals',
+            outputs: [{ name: '', type: 'uint8' }],
+            stateMutability: 'view',
+            type: 'function'
+        }
+    ],
 };
 const usdcAddresses = {
-  1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',       // Ethereum Mainnet
-  137: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',     // Polygon
-  42161: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',   // Arbitrum
-  10: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85'       //Optimism 
+    1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',       // Ethereum Mainnet
+    137: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',     // Polygon
+    42161: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',   // Arbitrum
+    10: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85'       //Optimism 
 };
 
 function USDCBalance() {
-  const { address } = useAccount();
-  const { chainId } = useAppKitNetwork();
+    const { address } = useAccount();
+    const { chainId } = useAppKitNetwork();
 
-  const results = useReadContracts({
-    contracts: [
-      {
-        address: chainId ? usdcAddresses[chainId] : undefined,
-        abi: erc20Contract.abi,
-        functionName: 'balanceOf',
-        args: [address],
-        chainId,
-      },
-      {
-        address: chainId ? usdcAddresses[chainId] : undefined,
-        abi: erc20Contract.abi,
-        functionName: 'decimals',
-        chainId,
-      }
-    ],
-    query: {
-      enabled: !!address && !!chainId && !!usdcAddresses[chainId],
-    },
-  });
+    const results = useReadContracts({
+        contracts: [
+            {
+                address: chainId ? usdcAddresses[chainId] : undefined,
+                abi: erc20Contract.abi,
+                functionName: 'balanceOf',
+                args: [address],
+                chainId,
+            },
+            {
+                address: chainId ? usdcAddresses[chainId] : undefined,
+                abi: erc20Contract.abi,
+                functionName: 'decimals',
+                chainId,
+            }
+        ],
+        query: {
+            enabled: !!address && !!chainId && !!usdcAddresses[chainId],
+        },
+    });
 
-  const balanceResult = results.data?.[0]?.result;
-  const decimals = results.data?.[1]?.result;
+    const balanceResult = results.data?.[0]?.result;
+    const decimals = results.data?.[1]?.result;
 
-  console.log('Chain ID:', chainId);
-  console.log('Network Balance Result:', results.data);
-  console.log('USDC Balance Result:', balanceResult);
-  console.log('USDC Decimals:', decimals);
-  const formatted = balanceResult && decimals
-    ? formatUnits(balanceResult, decimals)
-    : null;
+    console.log('Chain ID:', chainId);
+    console.log('Network Balance Result:', results.data);
+    console.log('USDC Balance Result:', balanceResult);
+    console.log('USDC Decimals:', decimals);
+    const formatted = balanceResult && decimals
+        ? formatUnits(balanceResult, decimals)
+        : null;
 
-  return <div>{formatted && <p>  <span style={{ color: "#718096" }}> USDC Balance: {formatted} </span></p>}</div>;
+    return <div>{formatted && <p>  <span style={{ color: "#718096" }}> USDC Balance: {formatted} </span></p>}</div>;
 }
 
 
@@ -212,7 +212,9 @@ function BUIDLPurchase() {
                     <strong>Buy BUIDL </strong> from <strong> Securitize </strong>
                 </div>
             </div> */}
-
+            <div>
+                <strong>Buy BUIDL </strong> from <strong> Securitize </strong>
+            </div>
             {isConnected ? (
                 chainId !== ETHEREUM_MAINNET_ID ? (
                     <button
@@ -254,7 +256,7 @@ function BUIDLPurchase() {
                                 const buidlAmount = Number(amount) / 1.01;
                                 const formatted = isFinite(buidlAmount) ? buidlAmount.toFixed(4) : "0.0000";
                                 return `Purchase ${formatted} BUIDL`;
-                              })()
+                            })()
                             : "Enter Valid Amount"}
                     </button>
                 )
