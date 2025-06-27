@@ -15,6 +15,9 @@ import { useAppKit } from "@reown/appkit/react";
 import { useAccount, useReadContracts } from 'wagmi';
 import { formatUnits } from 'viem';
 
+import BUIDLPurchase from "./BUIDLPurchase";
+
+
 // 0. Setup queryClient
 const queryClient = new QueryClient()
 
@@ -30,7 +33,8 @@ const metadata = {
 }
 
 // 3. Set the networks
-const networks = [mainnet, arbitrum, polygon, optimism]
+// const networks = [mainnet, arbitrum, polygon, optimism]
+const networks = [mainnet]
 
 // 4. Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({
@@ -161,8 +165,9 @@ export default function App() {
   return (
     <>
 
-      <appkit-button size='sm' balance='hide' />
-
+      {/* <appkit-button size='sm' balance='hide' /> */}
+      <BUIDLPurchase />
+      {/* 
       {isConnected && (
         <>
           <p>Address: {address}</p>
@@ -189,6 +194,7 @@ export default function App() {
       ) : (
         <button onClick={open}>Connect Wallet</button>
       )}
+        */}
     </>
   )
 }
