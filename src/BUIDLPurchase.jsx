@@ -248,7 +248,13 @@ function BUIDLPurchase() {
                         }}
                         onClick={isAmountValid ? handlePurchase : undefined}
                     >
-                        {isAmountValid ? "Purchase" : "Enter Valid Amount"}
+                        {isAmountValid
+                            ? (() => {
+                                const buidlAmount = Number(amount) / 1.01;
+                                const formatted = isFinite(buidlAmount) ? buidlAmount.toFixed(4) : "0.0000";
+                                return `Purchase ${formatted} BUIDL`;
+                              })()
+                            : "Enter Valid Amount"}
                     </button>
                 )
             ) : (
