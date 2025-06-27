@@ -135,17 +135,19 @@ function BUIDLPurchase() {
     const isAmountValid = amount && !isNaN(amount) && Number(amount) > 0 && Number(amount) <= usdcBalance;
 
     return (
-        <div style={{ border: "1px solid #e2e8f0", borderRadius: "12px", padding: "24px", maxWidth: "500px", margin: "0 auto", backgroundColor: "#fff" }}>
+        <div style={{ border: "1px solid #e2e8f0", borderRadius: "12px", padding: "24px", maxWidth: "550px", margin: "0 auto", backgroundColor: "#fff" }}>
             <h2>BUIDL Purchase</h2>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-                <img
-                    src="https://v0-dealer-site-woad.vercel.app/images/buidl-logo.png"
-                    alt="BUIDL Logo"
-                    style={{ width: "32px", height: "32px", borderRadius: "50%" }}
-                />
-                <span style={{ fontSize: "16px", color: "#2d3748" }}>
-                    Blackrock USD Institutional Digital Liquidity Fund
-                </span>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <img
+                        src="https://v0-dealer-site-woad.vercel.app/images/buidl-logo.png"
+                        alt="BUIDL Logo"
+                        style={{ width: "32px", height: "32px", borderRadius: "50%" }}
+                    />
+                    <span style={{ fontSize: "16px", color: "#2d3748" }}>
+                        Blackrock USD Institutional Digital Liquidity Fund
+                    </span>
+                </div>
                 <appkit-button size='sm' balance='hide' />
             </div>
             <div style={{ marginTop: "16px", color: "#4a5568" }}>
