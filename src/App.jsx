@@ -59,10 +59,6 @@ createAppKit({
   }, 
   themeVariables: {
     "--w3m-font-family": "system-ui, Avenir, Helvetica, Arial, sans-serif",
-    // "--w3m-color-mix": "#3b82f6",
-    // "--w3m-color-mix-strength": 40,
-    // "--w3m-font-size-master": "10px",
-    // "--w3m-border-radius-master": "2px",
   },
 })
 

@@ -1,34 +1,102 @@
 import React, { useState, useEffect } from "react";
-import { useAccount, useReadContracts } from "wagmi";
-import { formatUnits } from "viem";
+import { useAccount, useReadContract } from "wagmi";
+import { erc20Abi, formatUnits } from "viem";
 import { useAppKit, useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
-
-const erc20Contract = {
-  abi: [
-    {
-      constant: true,
-      inputs: [{ name: "account", type: "address" }],
-      name: "balanceOf",
-      outputs: [{ name: "", type: "uint256" }],
-      type: "function",
-      stateMutability: "view",
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "decimals",
-      outputs: [{ name: "", type: "uint8" }],
-      stateMutability: "view",
-      type: "function",
-    },
-  ],
-};
 
 const usdcAddresses = {
   1: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   137: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
   42161: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
   10: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+};
+
+// 🪄 Styles
+const containerStyle = {
+  border: "1px solid #e2e8f0",
+  borderRadius: "12px",
+  padding: "24px",
+  maxWidth: "550px",
+  margin: "0 auto",
+  backgroundColor: "#fff",
+};
+
+const headerStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "8px",
+  marginBottom: "8px",
+};
+
+const headerInfoStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+};
+
+const expectedStyle = {
+  marginTop: "16px",
+  color: "#4a5568",
+};
+
+const expectedRateStyle = {
+  fontSize: "18px",
+  fontWeight: "bold",
+  color: "#2d3748",
+};
+
+const labelStyle = {
+  display: "block",
+  marginTop: "16px",
+};
+
+const inputContainerStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  border: "1px solid #e2e8f0",
+  borderRadius: "8px",
+  padding: "12px",
+  marginTop: "8px",
+};
+
+const inputStyle = {
+  border: "none",
+  outline: "none",
+  fontSize: "18px",
+  flex: 1,
+  background: "transparent",
+  appearance: "none",
+  WebkitAppearance: "none",
+  MozAppearance: "textfield",
+  boxShadow: "none",
+};
+
+const tokenStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "6px",
+};
+
+const balanceWarningStyle = {
+  color: "#dc2626",
+  marginTop: "4px",
+  fontSize: "14px",
+};
+
+const balanceInfoStyle = {
+  marginTop: "8px",
+  color: "#718096",
+};
+
+const buyInfoStyle = {
+  marginTop: "16px",
+};
+
+const disclaimerStyle = {
+  fontSize: "12px",
+  color: "#4a5568",
+  marginTop: "16px",
 };
 
 // 🪄 Reusable button styles
@@ -71,38 +139,27 @@ function BUIDLPurchase() {
   const { chainId } = useAppKitNetwork();
   const ETHEREUM_MAINNET_ID = 1;
 
-  // Reset amount when isConnected becomes false
+  // Reset amount when disconnected
   useEffect(() => {
     if (!isConnected) {
       setAmount("");
     }
   }, [isConnected]);
 
-  const { data } = useReadContracts({
-    contracts: [
-      {
-        address: chainId ? usdcAddresses[chainId] : undefined,
-        abi: erc20Contract.abi,
-        functionName: "balanceOf",
-        args: [address],
-        chainId,
-      },
-      {
-        address: chainId ? usdcAddresses[chainId] : undefined,
-        abi: erc20Contract.abi,
-        functionName: "decimals",
-        chainId,
-      },
-    ],
+  const decimals = 6;
+
+  const { data: balanceData } = useReadContract({
+    abi: erc20Abi,
+    address: chainId ? usdcAddresses[chainId] : undefined,
+    functionName: "balanceOf",
+    args: [address],
     query: {
       enabled: !!address && !!chainId && !!usdcAddresses[chainId],
     },
   });
 
-  const balanceResult = data?.[0]?.result;
-  const decimals = data?.[1]?.result;
   const usdcBalance =
-    balanceResult && decimals ? Number(formatUnits(balanceResult, decimals)) : 0;
+    balanceData ? Number(formatUnits(balanceData, decimals)) : 0;
 
   const isAmountValid =
     amount && !isNaN(amount) && Number(amount) > 0 && Number(amount) <= usdcBalance;
@@ -119,28 +176,11 @@ function BUIDLPurchase() {
     amount && !isNaN(amount) ? (Number(amount) / 1.01).toFixed(4) : "0.0000";
 
   return (
-    <div
-      style={{
-        border: "1px solid #e2e8f0",
-        borderRadius: "12px",
-        padding: "24px",
-        maxWidth: "550px",
-        margin: "0 auto",
-        backgroundColor: "#fff",
-      }}
-    >
+    <div style={containerStyle}>
       <h2>BUIDL Purchase</h2>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "8px",
-          marginBottom: "8px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div style={headerStyle}>
+        <div style={headerInfoStyle}>
           <img
             src="https://v0-dealer-site-woad.vercel.app/images/buidl-logo.png"
             alt="BUIDL Logo"
@@ -153,64 +193,39 @@ function BUIDLPurchase() {
         <appkit-button size="sm" balance="hide" style={{ whiteSpace: "nowrap" }} />
       </div>
 
-      <div style={{ marginTop: "16px", color: "#4a5568" }}>
+      <div style={expectedStyle}>
         <span style={{ color: "#718096" }}>Expected</span>
-        <div
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-            color: "#2d3748",
-          }}
-        >
+        <div style={expectedRateStyle}>
           1.00 BUIDL per 1.01 USDC
         </div>
       </div>
 
-      <label htmlFor="amount" style={{ display: "block", marginTop: "16px" }}>
+      <label htmlFor="amount" style={labelStyle}>
         Enter the amount to purchase
       </label>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          border: "1px solid #e2e8f0",
-          borderRadius: "8px",
-          padding: "12px",
-          marginTop: "8px",
-        }}
-      >
+      <div style={inputContainerStyle}>
         <input
           id="amount"
           type="number"
           min="0"
+          autoComplete="off"
           value={amount}
           onChange={(e) => {
             const value = e.target.value;
             if (value.includes(".")) {
               const [intPart, decPart] = value.split(".");
-              setAmount(`${intPart}.${decPart.slice(0,6)}`);
+              setAmount(`${intPart}.${decPart.slice(0, 6)}`);
             } else {
               setAmount(value);
             }
           }}
           placeholder="0.00"
-          style={{
-            border: "none",
-            outline: "none",
-            fontSize: "18px",
-            flex: 1,
-            background: "transparent",
-            appearance: "none",
-            WebkitAppearance: "none",
-            MozAppearance: "textfield",
-            boxShadow: "none",
-          }}
+          style={inputStyle}
           max={usdcBalance || undefined}
           disabled={!isConnected}
         />
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <div style={tokenStyle}>
           <img
             src="https://images.seeklogo.com/logo-png/40/1/usd-coin-usdc-logo-png_seeklogo-408043.png"
             alt="USDC"
@@ -221,18 +236,18 @@ function BUIDLPurchase() {
       </div>
 
       {amount && Number(amount) > usdcBalance && (
-        <div style={{ color: "#dc2626", marginTop: "4px", fontSize: "14px" }}>
+        <div style={balanceWarningStyle}>
           Amount exceeds your USDC balance.
         </div>
       )}
 
       {usdcBalance > 0 && (
-        <p style={{ marginTop: "8px", color: "#718096" }}>
+        <p style={balanceInfoStyle}>
           USDC Balance: {usdcBalance.toFixed(2)}
         </p>
       )}
 
-      <div style={{ marginTop: "16px" }}>
+      <div style={buyInfoStyle}>
         <strong>Buy BUIDL</strong> from <strong>Securitize</strong>
       </div>
 
@@ -260,7 +275,7 @@ function BUIDLPurchase() {
         </button>
       )}
 
-      <p style={{ fontSize: "12px", color: "#4a5568", marginTop: "16px" }}>
+      <p style={disclaimerStyle}>
         Each notice of redemption delivered to Securitize by any investor will
         be irrevocable unless the Sponsor determines otherwise in its sole
         discretion. No guarantee or representation is made that the Fund will
