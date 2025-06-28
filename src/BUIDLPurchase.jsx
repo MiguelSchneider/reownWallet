@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAccount, useReadContracts } from "wagmi";
 import { formatUnits } from "viem";
 import { useAppKit, useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
@@ -70,6 +70,13 @@ function BUIDLPurchase() {
   const { address } = useAccount();
   const { chainId } = useAppKitNetwork();
   const ETHEREUM_MAINNET_ID = 1;
+
+  // Reset amount when isConnected becomes false
+  useEffect(() => {
+    if (!isConnected) {
+      setAmount("");
+    }
+  }, [isConnected]);
 
   const { data } = useReadContracts({
     contracts: [
@@ -143,7 +150,7 @@ function BUIDLPurchase() {
             Blackrock USD Institutional Digital Liquidity Fund
           </span>
         </div>
-        <appkit-button size="sm" balance="hide" />
+        <appkit-button size="sm" balance="hide" style={{ whiteSpace: "nowrap" }} />
       </div>
 
       <div style={{ marginTop: "16px", color: "#4a5568" }}>
@@ -179,13 +186,26 @@ function BUIDLPurchase() {
           type="number"
           min="0"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value.includes(".")) {
+              const [intPart, decPart] = value.split(".");
+              setAmount(`${intPart}.${decPart.slice(0,6)}`);
+            } else {
+              setAmount(value);
+            }
+          }}
           placeholder="0.00"
           style={{
             border: "none",
             outline: "none",
             fontSize: "18px",
             flex: 1,
+            background: "transparent",
+            appearance: "none",
+            WebkitAppearance: "none",
+            MozAppearance: "textfield",
+            boxShadow: "none",
           }}
           max={usdcBalance || undefined}
           disabled={!isConnected}
