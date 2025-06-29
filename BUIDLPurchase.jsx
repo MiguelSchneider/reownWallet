@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { erc20Abi, formatUnits } from "viem";
 import { useAppKit, useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
+import { SecIdKitButton } from "../SecIdKit/SecIdKitButton";
+import { SecIdKitProvider, useSecIdKitStatus, useInvestorDetails, useSecIdKitActions } from "../SecIdKit/SecIdKitApp.jsx";
 
 const usdcAddresses = {
   1: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -139,6 +141,12 @@ function BUIDLPurchase() {
   const { chainId } = useAppKitNetwork();
   const ETHEREUM_MAINNET_ID = 1;
 
+  const status = useSecIdKitStatus();
+  const investor = useInvestorDetails();
+  const { refreshInvestorDetails } = useSecIdKitActions();
+
+  // Removed renderLoginLogo usage; use SecIdKitButton instead.
+
   // Reset amount when disconnected
   useEffect(() => {
     if (!isConnected) {
@@ -177,8 +185,26 @@ function BUIDLPurchase() {
 
   return (
     <div style={containerStyle}>
-      <h2>BUIDL Purchase</h2>
-
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2>BUIDL Purchase</h2>
+        <div> 
+        {status === "needs_login" && (
+          <SecIdKitButton size="sm" style={{ marginLeft: "auto" }}>
+          </SecIdKitButton>
+        )}
+        {status === "error" && (
+          <div style={{ color: "red" }}>
+            Error: {investor?.error || "Unknown error"}
+          </div>
+        )}
+        {status === "verified" && (
+          <div style={{ color: "green" }}>
+            Welcome, {investor?.investorFullName || investor?.fullName}!
+          </div>
+        )}
+        <div style={{ flex: 1 }}></div>
+        </div>
+      </div>
       <div style={headerStyle}>
         <div style={headerInfoStyle}>
           <img
