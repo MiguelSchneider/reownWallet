@@ -143,7 +143,7 @@ function BUIDLPurchase() {
 
   const status = useSecIdKitStatus();
   const investor = useInvestorDetails();
-  const { refreshInvestorDetails } = useSecIdKitActions();
+  const { refreshInvestorDetails, clearSession } = useSecIdKitActions();
 
   // Removed renderLoginLogo usage; use SecIdKitButton instead.
 
@@ -187,23 +187,11 @@ function BUIDLPurchase() {
     <div style={containerStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2>BUIDL Purchase</h2>
-        <div> 
-        {status === "needs_login" && (
-          <SecIdKitButton size="sm" style={{ marginLeft: "auto" }}>
-          </SecIdKitButton>
-        )}
-        {status === "error" && (
-          <div style={{ color: "red" }}>
-            Error: {investor?.error || "Unknown error"}
-          </div>
-        )}
-        {status === "verified" && (
-          <div style={{ color: "green" }}>
-            Welcome, {investor?.investorFullName || investor?.fullName}!
-          </div>
-        )}
-        <div style={{ flex: 1 }}></div>
-        </div>
+        <SecIdKitButton
+          size="sm"
+          onLogout={clearSession}
+          style={{ marginLeft: "auto" }}
+        />
       </div>
       <div style={headerStyle}>
         <div style={headerInfoStyle}>
@@ -260,45 +248,56 @@ function BUIDLPurchase() {
           <span style={{ fontWeight: "500" }}>USDC</span>
         </div>
       </div>
-
-      {amount && Number(amount) > usdcBalance && (
-        <div style={balanceWarningStyle}>
-          Amount exceeds your USDC balance.
+      {status !== "verified" ? (
+        <div style={{ display: "flex", justifyContent: "space-evenly", marginTop: "16px" }}>
+          <SecIdKitButton
+            size="sm"
+            onLogout={clearSession}
+            style={{ marginLeft: "auto" }}
+          />
         </div>
-      )}
+      ) : (
+        <>
+          {amount && Number(amount) > usdcBalance && (
+            <div style={balanceWarningStyle}>
+              Amount exceeds your USDC balance.
+            </div>
+          )}
 
-      {usdcBalance > 0 && (
-        <p style={balanceInfoStyle}>
-          USDC Balance: {usdcBalance.toFixed(2)}
-        </p>
-      )}
+          {usdcBalance > 0 && (
+            <p style={balanceInfoStyle}>
+              USDC Balance: {usdcBalance.toFixed(2)}
+            </p>
+          )}
 
-      <div style={buyInfoStyle}>
-        <strong>Buy BUIDL</strong> from <strong>Securitize</strong>
-      </div>
+          <div style={buyInfoStyle}>
+            <strong>Buy BUIDL</strong> from <strong>Securitize</strong>
+          </div>
 
-      {!isConnected && (
-        <button onClick={handleConnectWallet} style={buttonStylePrimary}>
-          Connect Wallet First
-        </button>
-      )}
+          {!isConnected && (
+            <button onClick={handleConnectWallet} style={buttonStylePrimary}>
+              Connect Wallet First
+            </button>
+          )}
 
-      {isConnected && chainId !== ETHEREUM_MAINNET_ID && (
-        <button disabled style={buttonStyleWarning}>
-          Please switch to Ethereum Mainnet
-        </button>
-      )}
+          {isConnected && chainId !== ETHEREUM_MAINNET_ID && (
+            <button disabled style={buttonStyleWarning}>
+              Please switch to Ethereum Mainnet
+            </button>
+          )}
 
-      {isConnected && chainId === ETHEREUM_MAINNET_ID && (
-        <button
-          disabled={!isAmountValid}
-          onClick={isAmountValid ? handlePurchase : undefined}
-          style={isAmountValid ? buttonStylePrimary : buttonStyleDisabled}
-        >
-          {isAmountValid
-            ? `Purchase ${buidlAmount} BUIDL`
-            : "Enter Valid Amount"}
-        </button>
+          {isConnected && chainId === ETHEREUM_MAINNET_ID && (
+            <button
+              disabled={!isAmountValid}
+              onClick={isAmountValid ? handlePurchase : undefined}
+              style={isAmountValid ? buttonStylePrimary : buttonStyleDisabled}
+            >
+              {isAmountValid
+                ? `Purchase ${buidlAmount} BUIDL`
+                : "Enter Valid Amount"}
+            </button>
+          )}
+        </>
       )}
 
       <p style={disclaimerStyle}>
